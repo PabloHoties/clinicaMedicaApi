@@ -18,7 +18,7 @@ public class SwaggerConfig {
                 .components(new Components())
                 .info(new Info()
                         .title("API Clínica Médica - COTI Informática")
-                        .description("Projeto Spring Boot API para controle de uma clínica")
+                        .description("Projeto Spring Boot API para controle de uma clínica médica")
                         .version("v1")
                         .contact(new Contact()
                                 .name("COTI Informática")

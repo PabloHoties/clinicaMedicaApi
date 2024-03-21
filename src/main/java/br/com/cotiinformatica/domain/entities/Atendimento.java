@@ -25,18 +25,18 @@ public class Atendimento {
 	private UUID id;
 	
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "data_atendimento")
+	@Column(name = "data_atendimento", nullable = false)
 	private Date dataAtendimento;
 	
 	@Column(name = "local", length = 100, nullable = false)
 	private String local;
 	
 	@ManyToOne
-	@JoinColumn(name = "paciente_id")
+	@JoinColumn(name = "paciente_id", nullable = false)
 	private Paciente paciente;
 	
 	@ManyToOne
-	@JoinColumn(name = "medico_id")
+	@JoinColumn(name = "medico_id", nullable = false)
 	private Medico medico;
 	
 	@OneToMany(mappedBy = "atendimento")

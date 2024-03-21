@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/medicos")
-public class MedicoController {
+@RequestMapping(value = "/api/pacientes")
+public class PacientesController {
 
 	@PostMapping("criar")
 	public void criar() {
@@ -18,12 +18,12 @@ public class MedicoController {
 	}
 	
 	@GetMapping("consultar")
-	public void consultar() {
+	public void consultar( ) {
 		// TODO
 	}
 	
 	@GetMapping("obter/{id}")
 	public void obter(@PathVariable("id") UUID id) {
-		// TODO
+		
 	}
 }
