@@ -125,6 +125,11 @@ public class PacientesTest {
 	}
 	
 	@Test
+	public void consultarPacientesTest() {
+		fail("Teste não implementado.");
+	}
+	
+	@Test
 	public void obterPacienteTest() {
 		fail("Teste não implementado.");
 	}
