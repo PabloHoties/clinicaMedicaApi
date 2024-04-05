@@ -2,12 +2,15 @@ package br.com.cotiinformatica.domain.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.cotiinformatica.domain.dtos.ConsultarMedicosResponseDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoRequestDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoResponseDto;
 import br.com.cotiinformatica.domain.entities.Medico;
@@ -41,15 +44,28 @@ public class MedicoDomainServiceImpl implements MedicoDomainService {
 	}
 
 	@Override
-	public List<CriarMedicoResponseDto> consultarMedicos() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ConsultarMedicosResponseDto> consultarMedicos() {
+
+		List<Medico> medicos = medicoRepository.findAll();
+
+		List<ConsultarMedicosResponseDto> response = modelMapper.map(medicos,
+				new TypeToken<List<ConsultarMedicosResponseDto>>() {
+				}.getType());
+
+		return response;
 	}
 
 	@Override
-	public CriarMedicoResponseDto obterMedico(UUID id) {
-		// TODO Auto-generated method stub
-		return null;
+	public ConsultarMedicosResponseDto obterMedico(UUID id) {
+
+		Optional<Medico> medico = medicoRepository.findById(id);
+
+		if (medico.isPresent()) {
+			ConsultarMedicosResponseDto response = modelMapper.map(medico, ConsultarMedicosResponseDto.class);
+			return response;
+		} else {
+			return null;
+		}
 	}
 
 }
