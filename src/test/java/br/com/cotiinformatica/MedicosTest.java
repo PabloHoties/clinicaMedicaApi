@@ -1,8 +1,8 @@
 package br.com.cotiinformatica;
 
 import static org.assertj.core.api.Assertions.fail;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +38,7 @@ public class MedicosTest {
 	ObjectMapper objectMapper;
 	
 	static String crm;
+	static String senha;
 	
 	@Test
 	@Order(1)
@@ -48,6 +49,7 @@ public class MedicosTest {
 		CriarMedicoRequestDto dto = new CriarMedicoRequestDto();
 		dto.setNome(faker.name().fullName());
 		dto.setCrm(faker.number().digits(7));
+		dto.setSenha("@Teste1234");
 		dto.setEspecializacao(faker.lorem().characters(7, 25));
 		
 		MvcResult result = mockMvc.perform
@@ -67,6 +69,7 @@ public class MedicosTest {
 		assertEquals(response.getEspecializacao(), dto.getEspecializacao());
 		
 		crm = dto.getCrm();
+		senha = dto.getSenha();
 	}
 	
 	@Test
@@ -79,6 +82,7 @@ public class MedicosTest {
 		dto.setNome(faker.name().fullName());
 		dto.setCrm(crm);
 		dto.setEspecializacao(faker.lorem().characters(7, 25));
+		dto.setSenha(senha);
 		
 		MvcResult result = mockMvc.perform
 				(post("/api/medicos/criar")
@@ -100,6 +104,7 @@ public class MedicosTest {
 		dto.setNome("");
 		dto.setCrm("");
 		dto.setEspecializacao("");
+		dto.setSenha("");
 		
 		MvcResult result = mockMvc.perform
 				(post("/api/medicos/criar")
@@ -116,6 +121,8 @@ public class MedicosTest {
 		assertTrue(content.contains("especializacao: Por favor, informe uma especialização de 7 a 25 caracteres."));
 		assertTrue(content.contains("nome: Por favor, informe o nome do Médico."));
 		assertTrue(content.contains("nome: Por favor, informe um nome de 8 a 150 caracteres."));
+		assertTrue(content.contains("senha: Por favor, informe uma senha com letras, números e símbolos de no mínimo 8 caracteres."));
+		assertTrue(content.contains("senha: Por favor, informe a senha do médico."));
 	}
 	
 	@Test

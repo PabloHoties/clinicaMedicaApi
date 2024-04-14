@@ -15,6 +15,7 @@ import br.com.cotiinformatica.domain.dtos.CriarMedicoRequestDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoResponseDto;
 import br.com.cotiinformatica.domain.entities.Medico;
 import br.com.cotiinformatica.domain.interfaces.MedicoDomainService;
+import br.com.cotiinformatica.infrastructure.components.SHA256Component;
 import br.com.cotiinformatica.infrastructure.repositories.MedicoRepository;
 
 @Service
@@ -25,6 +26,9 @@ public class MedicoDomainServiceImpl implements MedicoDomainService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private SHA256Component sha256Component;
 
 	@Override
 	public CriarMedicoResponseDto criarMedico(CriarMedicoRequestDto dto) {
@@ -34,6 +38,7 @@ public class MedicoDomainServiceImpl implements MedicoDomainService {
 
 		Medico medico = modelMapper.map(dto, Medico.class);
 		medico.setId(UUID.randomUUID());
+		medico.setSenha(sha256Component.criptografarSHA256(dto.getSenha()));
 
 		medicoRepository.save(medico);
 

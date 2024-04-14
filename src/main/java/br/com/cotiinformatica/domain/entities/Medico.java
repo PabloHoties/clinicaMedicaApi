@@ -25,6 +25,9 @@ public class Medico {
 	@Column(name = "crm", length = 7, nullable = false, unique = true)
 	private String crm;
 	
+	@Column(name = "senha", length = 100)
+	private String senha;
+	
 	@Column(name = "especializacao", length = 25, nullable = false)
 	private String especializacao;
 	

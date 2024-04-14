@@ -42,4 +42,9 @@ public class MedicosController {
 	public ConsultarMedicosResponseDto obter(@PathVariable("id") UUID id) {
 		return medicoDomainService.obterMedico(id);
 	}
+	
+	@PostMapping("autenticar")
+	public void autenticar() {
+		// TODO
+	}
 }
