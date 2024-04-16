@@ -28,6 +28,9 @@ public class Paciente {
 	@Column(name = "cpf", length = 14, nullable = false, unique = true)
 	private String cpf;
 	
+	@Column(name = "senha", length = 100)
+	private String senha;
+	
 	@Column(name = "sexo", length = 10, nullable = false)
 	private String sexo;
 	

@@ -19,10 +19,15 @@ public class CriarPacienteRequestDto {
 	@NotEmpty(message = "Por favor, informe o CPF do paciente.")
 	private String cpf;
 	
+	@Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$",
+			message = "Por favor, informe uma senha com letras, números e símbolos de no mínimo 8 caracteres.")
+	@NotEmpty(message = "Por favor, informe a senha do paciente.")
+	private String senha;
+
 	@Size(min = 5, max = 10, message = "Por favor, informe um sexo de 5 a 10 caracteres.")
 	@NotEmpty(message = "Por favor, informe o sexo do paciente.")
 	private String sexo;
-	
+
 	@NotNull(message = "Por favor, informe uma data.")
 	private Date dataNascimento;
 }

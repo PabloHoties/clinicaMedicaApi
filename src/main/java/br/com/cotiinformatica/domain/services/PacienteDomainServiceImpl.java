@@ -10,11 +10,15 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.cotiinformatica.domain.dtos.AutenticarPacienteResponseDto;
+import br.com.cotiinformatica.domain.dtos.AutenticarPacienteResquestDto;
 import br.com.cotiinformatica.domain.dtos.ConsultarPacientesResponseDto;
 import br.com.cotiinformatica.domain.dtos.CriarPacienteRequestDto;
 import br.com.cotiinformatica.domain.dtos.CriarPacienteResponseDto;
 import br.com.cotiinformatica.domain.entities.Paciente;
 import br.com.cotiinformatica.domain.interfaces.PacienteDomainService;
+import br.com.cotiinformatica.infrastructure.components.SHA256Component;
+import br.com.cotiinformatica.infrastructure.components.TokenComponent;
 import br.com.cotiinformatica.infrastructure.repositories.PacienteRepository;
 
 @Service
@@ -25,6 +29,12 @@ public class PacienteDomainServiceImpl implements PacienteDomainService {
 
 	@Autowired
 	private ModelMapper modelMapper;
+	
+	@Autowired
+	private SHA256Component sha256Component;
+	
+	@Autowired
+	private TokenComponent tokenComponent;
 
 	@Override
 	public CriarPacienteResponseDto criarPaciente(CriarPacienteRequestDto dto) {
@@ -35,6 +45,7 @@ public class PacienteDomainServiceImpl implements PacienteDomainService {
 		Paciente paciente = modelMapper.map(dto, Paciente.class);
 
 		paciente.setId(UUID.randomUUID());
+		paciente.setSenha(sha256Component.criptografarSHA256(dto.getSenha()));
 
 		pacienteRepository.save(paciente);
 
@@ -67,6 +78,26 @@ public class PacienteDomainServiceImpl implements PacienteDomainService {
 			return response;
 		} else {
 			return null;
+		}
+	}
+
+	@Override
+	public AutenticarPacienteResponseDto autenticarPaciente(AutenticarPacienteResquestDto dto) {
+		
+		Paciente paciente = pacienteRepository.findByCpfAndSenha(dto.getCpf(), sha256Component.criptografarSHA256(dto.getSenha()));
+		
+		if (paciente != null) {
+			AutenticarPacienteResponseDto response = modelMapper.map(paciente, AutenticarPacienteResponseDto.class);
+			response.setDataHoraAcesso(new Date());
+			
+			try {
+				response.setToken(tokenComponent.generateToken(paciente.getCpf()));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return response;
+		} else {
+			throw new IllegalAccessError("Acesso negado. Paciente não encontrado.");
 		}
 	}
 

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.cotiinformatica.domain.dtos.AutenticarPacienteResponseDto;
+import br.com.cotiinformatica.domain.dtos.AutenticarPacienteResquestDto;
 import br.com.cotiinformatica.domain.dtos.ConsultarPacientesResponseDto;
 import br.com.cotiinformatica.domain.dtos.CriarPacienteRequestDto;
 import br.com.cotiinformatica.domain.dtos.CriarPacienteResponseDto;
@@ -41,5 +43,11 @@ public class PacientesController {
 	@GetMapping("obter/{id}")
 	public ConsultarPacientesResponseDto obter(@PathVariable("id") UUID id) {
 		return pacienteDomainService.obterPaciente(id);
+	}
+	
+	@PostMapping("autenticar")
+	public ResponseEntity<AutenticarPacienteResponseDto> autenticar(@RequestBody @Valid AutenticarPacienteResquestDto dto) {
+		AutenticarPacienteResponseDto response = pacienteDomainService.autenticarPaciente(dto);
+		return ResponseEntity.status(200).body(response);
 	}
 }
