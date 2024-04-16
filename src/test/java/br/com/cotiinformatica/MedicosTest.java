@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 
+import br.com.cotiinformatica.domain.dtos.AutenticarMedicoRequestDto;
+import br.com.cotiinformatica.domain.dtos.AutenticarMedicoResponseDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoRequestDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoResponseDto;
 
@@ -126,6 +128,74 @@ public class MedicosTest {
 	}
 	
 	@Test
+	@Order(4)
+	public void autenticarMedicoComSucessoTest() throws Exception {
+		
+		AutenticarMedicoRequestDto dto = new AutenticarMedicoRequestDto();
+		
+		dto.setCrm(crm);
+		dto.setSenha(senha);
+		
+		MvcResult result = mockMvc.perform(post("/api/medicos/autenticar")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		String content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+		AutenticarMedicoResponseDto response = objectMapper.readValue(content, AutenticarMedicoResponseDto.class);
+		
+		assertNotNull(response.getId());
+		assertNotNull(response.getNome());
+		assertEquals(response.getCrm(), crm);
+		assertNotNull(response.getSenha());
+		assertNotNull(response.getEspecializacao());
+		assertNotNull(response.getToken());
+		assertNotNull(response.getDataHoraAcesso());
+	}
+	
+	@Test
+	@Order(5)
+	public void autenticarMedicoComAcessoNegadoTest() throws Exception {
+		
+		AutenticarMedicoRequestDto dto = new AutenticarMedicoRequestDto();
+		
+		dto.setCrm("0000000");
+		dto.setSenha("@Teste00");
+		
+		MvcResult result = mockMvc.perform(post("/api/medicos/autenticar")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isUnauthorized())
+				.andReturn();
+		
+		String content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+		assertTrue(content.contains("Acesso negado. Médico não encontrado."));
+	}
+	
+	@Test
+	@Order(6)
+	public void autenticarMedicoComDadosInvalidosTest() throws Exception {
+		
+		AutenticarMedicoRequestDto dto = new AutenticarMedicoRequestDto();
+		
+		dto.setCrm("");
+		dto.setSenha("");
+		
+		MvcResult result = mockMvc.perform(post("/api/medicos/autenticar")
+				.contentType("application/json")
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(status().isBadRequest())
+				.andReturn();
+		
+		String content = result.getResponse().getContentAsString(StandardCharsets.UTF_8);
+		assertTrue(content.contains("crm: Por favor, informe o CRM do médico."));
+		assertTrue(content.contains("crm: Por favor, informe um CRM de 7 digítos válido."));
+		assertTrue(content.contains("senha: Por favor, informe a senha do médico."));
+		assertTrue(content.contains("senha: Por favor, informe uma senha com pelo menos 8 caracteres."));
+	}
+	
+	@Test
 	public void consultarMedicosTest() {
 		fail("Teste não implementado.");
 	}
@@ -134,4 +204,5 @@ public class MedicosTest {
 	public void obterMedicoTest() {
 		fail("Teste não implementado.");
 	}
+	
 }

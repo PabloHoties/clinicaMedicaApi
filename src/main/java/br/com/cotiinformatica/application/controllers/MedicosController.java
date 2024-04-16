@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.cotiinformatica.domain.dtos.AutenticarMedicoRequestDto;
+import br.com.cotiinformatica.domain.dtos.AutenticarMedicoResponseDto;
 import br.com.cotiinformatica.domain.dtos.ConsultarMedicosResponseDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoRequestDto;
 import br.com.cotiinformatica.domain.dtos.CriarMedicoResponseDto;
@@ -44,7 +46,8 @@ public class MedicosController {
 	}
 	
 	@PostMapping("autenticar")
-	public void autenticar() {
-		// TODO
+	public ResponseEntity<AutenticarMedicoResponseDto> autenticar(@RequestBody @Valid AutenticarMedicoRequestDto dto) {		
+		AutenticarMedicoResponseDto response = medicoDomainService.autenticarMedico(dto);
+		return ResponseEntity.status(200).body(response);
 	}
 }
