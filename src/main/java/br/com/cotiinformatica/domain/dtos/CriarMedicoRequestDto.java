@@ -2,9 +2,8 @@ package br.com.cotiinformatica.domain.dtos;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -29,8 +28,6 @@ public class CriarMedicoRequestDto {
 	@NotEmpty(message = "Por favor, informe a especialização do médico.")
 	private String especializacao;
 	
-	@JsonIgnore
-	private byte[] fotoByte;
-	
+	@NotNull
 	private MultipartFile foto;
 }

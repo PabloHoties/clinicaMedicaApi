@@ -41,7 +41,17 @@ public class MedicoDomainServiceImpl implements MedicoDomainService {
 
 		if (medicoRepository.findByCrm(dto.getCrm()) != null)
 			throw new IllegalArgumentException("O CRM informado já está cadastrado.");
-
+				
+		if (dto.getFoto().isEmpty())
+			throw new IllegalArgumentException("Por favor, faça o upload da foto do médico.");
+		
+		String tipo = dto.getFoto().getContentType();
+		if (!(tipo.equals("image/jpeg") || tipo.equals("image/jpg") || tipo.equals("image/png")))
+			throw new IllegalArgumentException("A foto deve ser do tipo JPEG, JPG ou PNG.");
+		
+		if (dto.getFoto().getSize() > 1048576)
+			throw new IllegalArgumentException("O tamanho da foto deve ter no máximo 1MB.");
+		
 		Medico medico = modelMapper.map(dto, Medico.class);
 		medico.setId(UUID.randomUUID());
 		medico.setSenha(sha256Component.criptografarSHA256(dto.getSenha()));
