@@ -11,7 +11,7 @@ import br.com.cotiinformatica.domain.dtos.CriarMedicoResponseDto;
 
 public interface MedicoDomainService {
 
-	CriarMedicoResponseDto criarMedico(CriarMedicoRequestDto dto);
+	CriarMedicoResponseDto criarMedico(CriarMedicoRequestDto dto) throws Exception;
 	
 	List<ConsultarMedicosResponseDto> consultarMedicos();
 	

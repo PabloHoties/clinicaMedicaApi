@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,12 +29,19 @@ public class MedicosController {
 	@Autowired
 	private MedicoDomainService medicoDomainService;
 
-	@PostMapping("criar")
-	public ResponseEntity<CriarMedicoResponseDto> criar(@RequestBody @Valid CriarMedicoRequestDto dto) {
+	@PostMapping(value = "criar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<CriarMedicoResponseDto> criar(@ModelAttribute @Valid CriarMedicoRequestDto dto) throws Exception {
 
-		CriarMedicoResponseDto response = medicoDomainService.criarMedico(dto);
+		String tipo = dto.getFoto().getContentType();
+		if (tipo.equals("image/jpeg") || tipo.equals("image/jpg") || tipo.equals("image/png")) {
+			dto.setFotoByte(dto.getFoto().getBytes());
+			
+			CriarMedicoResponseDto response = medicoDomainService.criarMedico(dto);
+			return ResponseEntity.status(201).body(response);
+		} else {
+			throw new IllegalArgumentException("Erro. A foto deve ser do tipo jpeg, jpg ou png.");
+		}
 
-		return ResponseEntity.status(201).body(response);
 	}
 
 	@GetMapping("consultar")

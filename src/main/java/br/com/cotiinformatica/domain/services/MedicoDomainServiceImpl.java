@@ -37,7 +37,7 @@ public class MedicoDomainServiceImpl implements MedicoDomainService {
 	private TokenComponent tokenComponent;
 
 	@Override
-	public CriarMedicoResponseDto criarMedico(CriarMedicoRequestDto dto) {
+	public CriarMedicoResponseDto criarMedico(CriarMedicoRequestDto dto) throws Exception {
 
 		if (medicoRepository.findByCrm(dto.getCrm()) != null)
 			throw new IllegalArgumentException("O CRM informado já está cadastrado.");
@@ -45,6 +45,7 @@ public class MedicoDomainServiceImpl implements MedicoDomainService {
 		Medico medico = modelMapper.map(dto, Medico.class);
 		medico.setId(UUID.randomUUID());
 		medico.setSenha(sha256Component.criptografarSHA256(dto.getSenha()));
+		medico.setFoto(dto.getFoto().getBytes());
 
 		medicoRepository.save(medico);
 
